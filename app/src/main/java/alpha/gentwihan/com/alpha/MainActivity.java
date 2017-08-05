@@ -19,6 +19,8 @@ import android.widget.TextView;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -30,6 +32,7 @@ import java.io.IOException;
 
 import alpha.gentwihan.com.alpha.utils.network.RetrofitClients;
 import alpha.gentwihan.com.alpha.utils.permissions.PermissionUtils;
+import alpha.gentwihan.com.alpha.utils.token.TokenUtils;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -45,6 +48,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 import alpha.gentwihan.com.alpha.utils.encoding.Md5Encoder;
 import alpha.gentwihan.com.alpha.utils.lessons.LessonUtils;
@@ -97,6 +101,7 @@ public class MainActivity extends AppCompatActivity {
         initView();
         InputData();
         ShowData();
+        PermissionUtils.chkAudioNWriteRecordPermission(this);
     }
 
     void InputData() {
@@ -143,11 +148,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
-  
-  
-        initView();
-        PermissionUtils.chkAudioNWriteRecordPermission(this);
-    }
 
 
     void initView() {
@@ -184,7 +184,7 @@ public class MainActivity extends AppCompatActivity {
 //        if (!isRecorderInitialized) {
         String filename = "record";
         mCourseId = "1";
-        initRecorder(filename);
+        initRecorder(generateFilename());
 //            isRecorderInitialized = true;
 //        }
 
@@ -203,6 +203,14 @@ public class MainActivity extends AppCompatActivity {
         stop.setEnabled(true);
 
         Toast.makeText(getApplicationContext(), "Recording Started", Toast.LENGTH_LONG);
+    }
+
+    private String generateFilename() {
+        Date dt = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd__hhmmss");
+        Log.d(TAG, "generateFilename: " + sdf.toString());
+
+        return null;
     }
 
     private void btnPlayClicked() {
@@ -263,7 +271,7 @@ public class MainActivity extends AppCompatActivity {
         ApiClient client = RetrofitClients.getInstance()
                 .getService(ApiClient.class);
 
-        Call<okhttp3.ResponseBody> call = client.createRecord("Token 75e6c8ae42e71d54c441c8b03d65ad80681f57ad",
+        Call<okhttp3.ResponseBody> call = client.createRecord("Token " + TokenUtils.getInstance().getToken(),
 //                "title",
                 courseIdAsRequestBody,
                 filenameAsRequestBody,
@@ -293,7 +301,6 @@ public class MainActivity extends AppCompatActivity {
         myAudioRecorder.setAudioEncoder(MediaRecorder.OutputFormat.AMR_NB);
         myAudioRecorder.setOutputFile(outputFile);
     }
-}
 }
 
 
