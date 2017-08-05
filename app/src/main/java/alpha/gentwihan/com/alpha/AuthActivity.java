@@ -28,6 +28,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 
 import alpha.gentwihan.com.alpha.utils.network.RetrofitClients;
+import alpha.gentwihan.com.alpha.utils.token.TokenUtils;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -108,6 +109,7 @@ implements GoogleApiClient.OnConnectionFailedListener{
             public void onSuccess(AuthResult authResult) {
                firebaseUser = authResult.getUser();
 
+
                 ApiClient client = RetrofitClients.getInstance()
                         .getService(ApiClient.class);
                 Call<User> call = client.getUser(
@@ -119,11 +121,13 @@ implements GoogleApiClient.OnConnectionFailedListener{
                     public void onResponse(Call<User> call, Response<User> response) {
 
                         Toast.makeText(AuthActivity.this,firebaseUser.getDisplayName()+"님 환영합니다",Toast.LENGTH_LONG ).show();
-                        if(response.code()==201) {
+                        TokenUtils.getInstance().setToken(response.body().getToken());
+                        if(response.code()==201 | true) {
                             startActivity(new Intent(AuthActivity.this, kloginActivity.class));
                             Log.d("test", response.body().getFirst_name());
                         } else if(response.code()==200)
                         {
+
                             startActivity(new Intent(AuthActivity.this, MainActivity.class));
                         }
                         else

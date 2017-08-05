@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.TextView;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -29,6 +30,8 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 import alpha.gentwihan.com.alpha.utils.encoding.Md5Encoder;
+import alpha.gentwihan.com.alpha.utils.lessons.LessonUtils;
+import alpha.gentwihan.com.alpha.utils.network.GsonUtils;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -39,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
     TextView array_tb[][] = new TextView[5][11];
     ArrayList<JSONObject> lectures = new ArrayList<JSONObject>();
     int color_cnt = 0;
-    String default_theme[] = {"#375e97", "#fb6542", "#ffbb00", "#3f681c", "#9a9eab", "#5d535e", "#ec96a4", "#dfe166", "#4cb5f5", "#34675c"};//시간표 색깔 조합
+    String default_theme[] = {"#375e97", "#fb6542", "#ffbb00", "#3f681c", "#9a9eab", "#5d535e", "#ec96a4", "#dfe166", "#4cb5f5", "#34675c", "#fb6542", "#ffbb00", "#3f681c", "#9a9eab", "#5d535e", "#ec96a4", "#dfe166", "#4cb5f5", "#34675c", "#fb6542", "#ffbb00", "#3f681c", "#9a9eab", "#5d535e", "#ec96a4", "#dfe166", "#4cb5f5", "#34675c"};//시간표 색깔 조합
     JSONArray jarray;
     //String chunk -> sample data
     String chunk = "[{'id':1,'year':17,'term':'2R','courseCode':'KECE109','courseName':'공업수학1','day':0,'startTime':1,'endTime':1,'buildingName':'미래융합기술관','roomType':'강의실','roomName':'B101','profName':'도락주','created':'2017-08-05T11:29:58.541099Z','user':1}," +
@@ -75,14 +78,16 @@ public class MainActivity extends AppCompatActivity {
     void InputData() {
         try
         {
+            String tmp=GsonUtils.getGson().toJson(LessonUtils.getInstance().getLessons());
+            Log.d("test",tmp);
             //obj_temp.put("courseCode","A");
-            jarray = new JSONArray(chunk);
+            jarray = new JSONArray(tmp);
 
             for(int i = 0 ; i < jarray.length() ; i++) {
                 JSONObject jObject = jarray.getJSONObject(i);
                 lectures.add(jObject);
                 color_cnt++;
-                lectures.get(i).put("bg_color", default_theme[color_cnt]);
+                lectures.get(i).put("bg_color", default_theme[0]);
             }
         }
         catch (JSONException e)
