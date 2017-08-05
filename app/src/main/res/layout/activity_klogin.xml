@@ -35,7 +35,7 @@
                 android:layout_width="150dp"
                 android:layout_gravity="center"
                 android:layout_height="150dp"
-
+                android:src="@drawable/korea"
                 />
             <!--android:src="@drawable/korea" -->
 

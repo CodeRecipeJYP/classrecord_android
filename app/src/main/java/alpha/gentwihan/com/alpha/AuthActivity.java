@@ -119,7 +119,7 @@ implements GoogleApiClient.OnConnectionFailedListener{
                     public void onResponse(Call<User> call, Response<User> response) {
 
                         Toast.makeText(AuthActivity.this,firebaseUser.getDisplayName()+"님 환영합니다",Toast.LENGTH_LONG ).show();
-                        if(response.code()==201 || true) {
+                        if(response.code()==201) {
                             startActivity(new Intent(AuthActivity.this, kloginActivity.class));
                             Log.d("test", response.body().getFirst_name());
                         } else if(response.code()==200)
