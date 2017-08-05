@@ -27,6 +27,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 
+import alpha.gentwihan.com.alpha.utils.network.RetrofitClients;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -107,10 +108,12 @@ implements GoogleApiClient.OnConnectionFailedListener{
             public void onSuccess(AuthResult authResult) {
                firebaseUser = authResult.getUser();
 
-                Retrofit.Builder builder = new Retrofit.Builder().baseUrl("http://52.198.142.127").addConverterFactory(GsonConverterFactory.create());
-                Retrofit retrofit = builder.build();
-                ApiClient client = retrofit.create(ApiClient.class);
-                Call<User> call = client.getUser(new LoginUser(firebaseUser.getUid(), firebaseUser.getDisplayName()));
+                ApiClient client = RetrofitClients.getInstance()
+                        .getService(ApiClient.class);
+                Call<User> call = client.getUser(
+                        new LoginUser(firebaseUser.getUid(), firebaseUser.getDisplayName())
+                );
+
                 call.enqueue(new Callback<User>() {
                     @Override
                     public void onResponse(Call<User> call, Response<User> response) {

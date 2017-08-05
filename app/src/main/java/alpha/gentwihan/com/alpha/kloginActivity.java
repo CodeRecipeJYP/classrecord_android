@@ -35,6 +35,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
+import alpha.gentwihan.com.alpha.utils.network.RetrofitClients;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -288,6 +289,7 @@ public class kloginActivity extends AppCompatActivity implements LoaderCallbacks
      * the user.
      */
     public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
+        private static final String TAG = "UserLoginTask";
 
         private final String mEmail;
         private final String mPassword;

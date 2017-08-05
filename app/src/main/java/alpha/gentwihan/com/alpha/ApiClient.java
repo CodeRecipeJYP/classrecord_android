@@ -15,7 +15,4 @@ public interface ApiClient {
 
     @POST("/api/users/")
     Call<User> getUser(@Body LoginUser loginuser);
-
-
-
 }
