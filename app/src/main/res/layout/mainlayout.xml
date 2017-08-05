@@ -12,6 +12,8 @@
 
         <LinearLayout
             android:orientation="horizontal"
+            android:paddingTop="6dp"
+            android:paddingBottom="6dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/row_day">
