@@ -3,6 +3,7 @@ package alpha.gentwihan.com.alpha;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -35,7 +36,10 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
+import alpha.gentwihan.com.alpha.utils.encoding.Md5Encoder;
+import alpha.gentwihan.com.alpha.utils.lessons.LessonUtils;
 import alpha.gentwihan.com.alpha.utils.network.RetrofitClients;
+import alpha.gentwihan.com.alpha.utils.token.TokenUtils;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -304,7 +308,40 @@ public class kloginActivity extends AppCompatActivity implements LoaderCallbacks
             // TODO: attempt authentication against a network service.
 
             try {
+                Log.d("test",mEmail+mPassword);
                 // Simulate network access.
+                ApiClient client = RetrofitClients.getInstance()
+                        .getService(ApiClient.class);
+                Call<List<Lesson>> call = client.getLesson(
+                        mEmail,Md5Encoder.encodeMd5(mPassword),"Token " + TokenUtils.getInstance().getToken()
+                );
+
+                call.enqueue(new Callback<List<Lesson>>() {
+                                 @Override
+                                 public void onResponse(Call<List<Lesson>> call, Response<List<Lesson>> response) {
+
+
+
+                                     if (response.isSuccessful() == false) {
+                                         Log.d("시발!!","fasf");
+                                         Toast.makeText(kloginActivity.this, "로그인에 실패했습니다", Toast.LENGTH_LONG).show();
+                                         return;
+                                     } else {
+                                         Log.d("test", response.body().toString());
+                                         Toast.makeText(kloginActivity.this, "연동에 성공했습니다", Toast.LENGTH_LONG).show();
+                                         LessonUtils.getInstance().setLessons(response.body());
+                                         startActivity(new Intent(kloginActivity.this, MainActivity.class));
+                                         finish();
+                                     }
+
+
+                                 }
+
+                    @Override
+                    public void onFailure(Call<List<Lesson>> call, Throwable t) {
+                        Log.d("ㅠㅠㅠㅠ","sad");
+                    }
+                });
 
                 Thread.sleep(20000);
             } catch (InterruptedException e) {
