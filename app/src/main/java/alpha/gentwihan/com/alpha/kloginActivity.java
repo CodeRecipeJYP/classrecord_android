@@ -19,6 +19,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -290,7 +291,7 @@ public class kloginActivity extends AppCompatActivity implements LoaderCallbacks
 
         private final String mEmail;
         private final String mPassword;
-
+        private String aa;
         UserLoginTask(String email, String password) {
             mEmail = email;
             mPassword = password;
@@ -302,24 +303,8 @@ public class kloginActivity extends AppCompatActivity implements LoaderCallbacks
 
             try {
                 // Simulate network access.
-                Retrofit.Builder builder = new Retrofit.Builder().baseUrl("http://52.198.142.127").addConverterFactory(GsonConverterFactory.create());
-                Retrofit retrofit = builder.build();
-                ApiClient client = retrofit.create(ApiClient.class);
-                Call<List<User>> call = client.getUser(new LoginUser("id", "name"));
-                call.enqueue(new Callback<List<User>>() {
-                    @Override
-                    public void onResponse(Call<List<User>> call, Response<List<User>> response) {
 
-                        Toast.makeText(kloginActivity.this,response.body().toString(),Toast.LENGTH_LONG).show();
-
-                    }
-
-                    @Override
-                    public void onFailure(Call<List<User>> call, Throwable t) {
-
-                    }
-                });
-                Thread.sleep(10000);
+                Thread.sleep(20000);
             } catch (InterruptedException e) {
                 return false;
             }

@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.Toast;
@@ -26,6 +27,12 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
 public class AuthActivity extends AppCompatActivity
 implements GoogleApiClient.OnConnectionFailedListener{
     private GoogleApiClient mGoogleApiClient;
@@ -33,6 +40,7 @@ implements GoogleApiClient.OnConnectionFailedListener{
     private FirebaseAuth mFirebaseAuth;
     private String TAG = "VideoActivity";
     private VideoView mVideoview;
+    FirebaseUser firebaseUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,10 +105,37 @@ implements GoogleApiClient.OnConnectionFailedListener{
         authResultTask.addOnSuccessListener(new OnSuccessListener<AuthResult>() {
             @Override
             public void onSuccess(AuthResult authResult) {
-                FirebaseUser firebaseUser = authResult.getUser();
-                Toast.makeText(AuthActivity.this,firebaseUser.getEmail()+" \n 환영합니다",Toast.LENGTH_LONG ).show();
-                startActivity(new Intent(AuthActivity.this,kloginActivity.class));
-                finish();
+               firebaseUser = authResult.getUser();
+
+                Retrofit.Builder builder = new Retrofit.Builder().baseUrl("http://52.198.142.127").addConverterFactory(GsonConverterFactory.create());
+                Retrofit retrofit = builder.build();
+                ApiClient client = retrofit.create(ApiClient.class);
+                Call<User> call = client.getUser(new LoginUser(firebaseUser.getUid(), firebaseUser.getDisplayName()));
+                call.enqueue(new Callback<User>() {
+                    @Override
+                    public void onResponse(Call<User> call, Response<User> response) {
+
+                        Toast.makeText(AuthActivity.this,firebaseUser.getDisplayName()+"님 환영합니다",Toast.LENGTH_LONG ).show();
+                        if(response.code()==201 || true) {
+                            startActivity(new Intent(AuthActivity.this, kloginActivity.class));
+                            Log.d("test", response.body().getFirst_name());
+                        } else if(response.code()==200)
+                        {
+                            startActivity(new Intent(AuthActivity.this, MainActivity.class));
+                        }
+                        else
+                        {
+                            Toast.makeText(AuthActivity.this,"에러",Toast.LENGTH_LONG).show();
+                        }
+                        finish();
+
+                    }
+
+                    @Override
+                    public void onFailure(Call<User> call, Throwable t) {
+
+                    }
+                });
 
             }
         });

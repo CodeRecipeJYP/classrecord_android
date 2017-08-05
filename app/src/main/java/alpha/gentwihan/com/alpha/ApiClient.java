@@ -14,7 +14,7 @@ import retrofit2.http.Path;
 public interface ApiClient {
 
     @POST("/api/users/")
-    Call<List<User>> getUser(@Body LoginUser loginuser);
+    Call<User> getUser(@Body LoginUser loginuser);
 
 
 
