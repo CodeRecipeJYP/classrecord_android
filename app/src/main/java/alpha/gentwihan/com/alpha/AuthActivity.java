@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.view.Window;
 import android.widget.Toast;
 import android.widget.VideoView;
 
@@ -98,7 +99,7 @@ implements GoogleApiClient.OnConnectionFailedListener{
             public void onSuccess(AuthResult authResult) {
                 FirebaseUser firebaseUser = authResult.getUser();
                 Toast.makeText(AuthActivity.this,firebaseUser.getEmail()+" \n 환영합니다",Toast.LENGTH_LONG ).show();
-                startActivity(new Intent(AuthActivity.this,MainActivity.class));
+                startActivity(new Intent(AuthActivity.this,kloginActivity.class));
                 finish();
 
             }
