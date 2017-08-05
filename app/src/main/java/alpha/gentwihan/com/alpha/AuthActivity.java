@@ -39,7 +39,6 @@ implements GoogleApiClient.OnConnectionFailedListener{
         setContentView(R.layout.activity_auth);
         loginBtn = (SignInButton) findViewById(R.id.signbtn);
 
-
         mVideoview = (VideoView) findViewById(R.id.videoview);
         //play video
         Uri uri = Uri.parse("android.resource://"+getPackageName()+"/"+R.raw.sourcevideo);
