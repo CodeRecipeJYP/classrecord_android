@@ -84,6 +84,7 @@ implements GoogleApiClient.OnConnectionFailedListener{
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        Log.d(TAG, "onActivityResult: requestCode="+requestCode);
         if(requestCode==100)
         {
             //Toast.makeText(AuthActivity.this,"잘 왔엉",Toast.LENGTH_SHORT).show();
@@ -91,6 +92,7 @@ implements GoogleApiClient.OnConnectionFailedListener{
             GoogleSignInAccount account = result.getSignInAccount();
             if(result.isSuccess())
             {
+                Log.d(TAG, "onActivityResult: ");
                 firebaseWithGoogle(account);
             }
             else
@@ -102,12 +104,14 @@ implements GoogleApiClient.OnConnectionFailedListener{
     }
     private void firebaseWithGoogle(GoogleSignInAccount account)
     {
+        Log.d(TAG, "firebaseWithGoogle: ");
         AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(),null);
         Task<AuthResult> authResultTask = mFirebaseAuth.signInWithCredential(credential);
         authResultTask.addOnSuccessListener(new OnSuccessListener<AuthResult>() {
             @Override
             public void onSuccess(AuthResult authResult) {
                firebaseUser = authResult.getUser();
+                Log.d(TAG, "firebaseWithGoogle/onSuccess: ");
 
 
                 ApiClient client = RetrofitClients.getInstance()
@@ -119,10 +123,10 @@ implements GoogleApiClient.OnConnectionFailedListener{
                 call.enqueue(new Callback<User>() {
                     @Override
                     public void onResponse(Call<User> call, Response<User> response) {
-
+                        Log.d(TAG, "onResponse() called with: response = [" + response.code() + "], response = [" + response.message() + "]");
                         Toast.makeText(AuthActivity.this,firebaseUser.getDisplayName()+"님 환영합니다",Toast.LENGTH_LONG ).show();
                         TokenUtils.getInstance().setToken(response.body().getToken());
-                        if(response.code()==201 | true) {
+                        if(response.code()==201 || true) {
                             startActivity(new Intent(AuthActivity.this, kloginActivity.class));
                             Log.d("test", response.body().getFirst_name());
                         } else if(response.code()==200)
@@ -140,7 +144,7 @@ implements GoogleApiClient.OnConnectionFailedListener{
 
                     @Override
                     public void onFailure(Call<User> call, Throwable t) {
-
+                        Log.d(TAG, "onFailure: ");
                     }
                 });
 

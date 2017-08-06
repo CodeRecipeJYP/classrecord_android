@@ -5,6 +5,7 @@ package alpha.gentwihan.com.alpha;
  */
 
 public class Lesson {
+    private int id;
     private int year;
     private String term;
     private String courseCode;

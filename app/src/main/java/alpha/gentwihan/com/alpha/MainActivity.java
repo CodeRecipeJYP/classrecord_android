@@ -48,6 +48,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Date;
 
 import alpha.gentwihan.com.alpha.utils.encoding.Md5Encoder;
@@ -68,6 +69,7 @@ public class MainActivity extends AppCompatActivity {
 
     TextView array_tb[][] = new TextView[5][11];
     ArrayList<JSONObject> lectures = new ArrayList<JSONObject>();
+    HashMap<String, String> bg_color = new HashMap();
     int color_cnt = 0;
     String default_theme[] = {"#375e97", "#fb6542", "#ffbb00", "#3f681c", "#9a9eab", "#5d535e", "#ec96a4", "#dfe166", "#4cb5f5", "#34675c", "#fb6542", "#ffbb00", "#3f681c", "#9a9eab", "#5d535e", "#ec96a4", "#dfe166", "#4cb5f5", "#34675c", "#fb6542", "#ffbb00", "#3f681c", "#9a9eab", "#5d535e", "#ec96a4", "#dfe166", "#4cb5f5", "#34675c"};//시간표 색깔 조합
     JSONArray jarray;
@@ -98,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
       
-        initView();
+        //initView();//심각한 오류 내포하고 있음
         InputData();
         ShowData();
         PermissionUtils.chkAudioNWriteRecordPermission(this);
@@ -115,8 +117,13 @@ public class MainActivity extends AppCompatActivity {
             for(int i = 0 ; i < jarray.length() ; i++) {
                 JSONObject jObject = jarray.getJSONObject(i);
                 lectures.add(jObject);
-                color_cnt++;
-                lectures.get(i).put("bg_color", default_theme[0]);
+                if(bg_color.containsKey(jObject.get("courseCode")) == false) {
+                    Log.d("bg_color", bg_color.toString());
+                    bg_color.put(jObject.get("courseCode").toString(), default_theme[color_cnt]);
+                    color_cnt++;
+                }
+                //color_cnt++;
+               // lectures.get(i).put("bg_color", default_theme[0]);
             }
         }
         catch (JSONException e)
@@ -138,8 +145,8 @@ public class MainActivity extends AppCompatActivity {
             for(int i = 0 ; i < lectures.size() ; i++) {
                 JSONObject jObject1 = lectures.get(i);
                 for(int j = jObject1.getInt("startTime") ; j <= jObject1.getInt("endTime") ; j++) {
-                    array_tb[jObject1.getInt("day")][j].setText(jObject1.getString("courseName"));
-                    array_tb[jObject1.getInt("day")][j].setBackgroundColor(Color.parseColor(jObject1.getString("bg_color")));
+                    array_tb[jObject1.getInt("day") - 1][j].setText(jObject1.getString("courseName"));
+                    array_tb[jObject1.getInt("day") - 1][j].setBackgroundColor(Color.parseColor(bg_color.get(jObject1.get("courseCode"))));
                 }
             }
         }
@@ -182,7 +189,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void btnRecordClicked() {
 //        if (!isRecorderInitialized) {
-        String filename = "record";
+        String filename = "record";//파일명 계속 변경핼
         mCourseId = "1";
         initRecorder(generateFilename());
 //            isRecorderInitialized = true;

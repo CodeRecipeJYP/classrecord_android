@@ -13,7 +13,7 @@ android {
     defaultConfig {
         applicationId "alpha.gentwihan.com.alpha"
         minSdkVersion 19
-        targetSdkVersion 25
+        targetSdkVersion 23
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
